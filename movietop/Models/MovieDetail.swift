@@ -10,21 +10,23 @@ import Foundation
 // MARK: - MovieDetail
 class MovieDetail: Codable {
     let adult: Bool
-    let backdropPath: String
-    let belongsToCollection: BelongsToCollection
+    let backdropPath: String?
+    let belongsToCollection: BelongsToCollection?
     let budget: Int
     let genres: [Genre]
-    let homepage: String
+    let homepage: String?
     let id: Int
-    let imdbID, originalLanguage, originalTitle, overview: String
+    let imdbID,overview, tagline: String?
+    let originalLanguage, originalTitle: String
     let popularity: Double
     let posterPath: String
     let productionCompanies: [ProductionCompany]
     let productionCountries: [ProductionCountry]
     let releaseDate: String
-    let revenue, runtime: Int
+    let revenue: Int
+    let runtime: Int?
     let spokenLanguages: [SpokenLanguage]
-    let status, tagline, title: String
+    let status, title: String
     let video: Bool
     let voteAverage: Double
     let voteCount: Int
@@ -81,7 +83,7 @@ class MovieDetail: Codable {
 // MARK: - BelongsToCollection
 class BelongsToCollection: Codable {
     let id: Int
-    let name, posterPath, backdropPath: String
+    let name, posterPath, backdropPath: String?
 
     enum CodingKeys: String, CodingKey {
         case id, name
@@ -111,7 +113,7 @@ class Genre: Codable {
 // MARK: - ProductionCompany
 class ProductionCompany: Codable {
     let id: Int
-    let logoPath, name, originCountry: String
+    let logoPath, name, originCountry: String?
 
     enum CodingKeys: String, CodingKey {
         case id

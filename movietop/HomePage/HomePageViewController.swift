@@ -7,7 +7,7 @@
 
 import UIKit
 
-class HomePageView: UIViewController {
+class HomePageViewController: UIViewController {
     
     @IBOutlet weak var popularMoviesCollection: UICollectionView!
     
@@ -46,20 +46,20 @@ class HomePageView: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let tapGestureBackground = UITapGestureRecognizer(target: self, action: #selector(self.backgroundTapped(_:)))
-        self.view.addGestureRecognizer(tapGestureBackground)
+//        let tapGestureBackground = UITapGestureRecognizer(target: self, action: #selector(self.backgroundTapped(_:)))
+//        self.view.addGestureRecognizer(tapGestureBackground)
         
         getMovieRecommend() { movies in
             self.myMovies = movies
-            DispatchQueue.main.async{
-                self.popularMoviesCollection.reloadData()
+            DispatchQueue.main.async{ [weak self] in
+                self?.popularMoviesCollection.reloadData()
             }
         }
         
         getUpcomingMovies() { movies in
             self.upcomingMovies = movies
-            DispatchQueue.main.async{
-                self.upcomingColletionView.reloadData()
+            DispatchQueue.main.async{ [weak self] in
+                self?.upcomingColletionView.reloadData()
             }
         }
         
@@ -158,21 +158,21 @@ class HomePageView: UIViewController {
     
 }
 
-extension HomePageView: UICollectionViewDelegate {
+extension HomePageViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        var movie: MovieRecommend
-//        print(indexPath.row)
-//        if collectionView == popularMoviesCollection {
-//            movie = myMovies[indexPath.row]
-//        } else {
-//            movie = upcomingMovies[indexPath.row]
-//        }
-//        tapMovie(movie: movie)
+        var movie: MovieRecommend
         print(indexPath.row)
+        if collectionView == popularMoviesCollection {
+            movie = myMovies[indexPath.row]
+        } else {
+            movie = upcomingMovies[indexPath.row]
+        }
+        tapMovie(movie: movie)
     }
     
     func tapMovie(movie: MovieRecommend) {
         let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "MovieDetailViewController") as? MovieDetailViewController
+        vc?.movieId = movie.id ?? 0
         self.navigationController?.pushViewController(vc!, animated: true)
     }
     
@@ -190,7 +190,7 @@ extension HomePageView: UICollectionViewDelegate {
     }
 }
 
-extension HomePageView: UICollectionViewDataSource {
+extension HomePageViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == popularMoviesCollection{
             popularPageControl.numberOfPages = myMovies.count

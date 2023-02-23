@@ -21,12 +21,93 @@ class MovieContentViewController: UIViewController {
     
     @IBOutlet weak var castCollection: UICollectionView!
     
+    @IBOutlet weak var overViewText: UILabel!
+    
+    @IBOutlet weak var moiveNameText: UILabel!
+    
+    @IBOutlet weak var actionText: CustomButtonView!
+    
+    @IBOutlet weak var ageText: CustomButtonView!
+    
+    @IBOutlet weak var statusText: InfoView!
+    
+    @IBOutlet weak var originalLanguageText: InfoView!
+    
+    @IBOutlet weak var budget: InfoView!
+    
+    @IBOutlet weak var revenueText: InfoView!
+    
+    @IBOutlet weak var movieImage: UIImageView!
+    
+    var movieId: Int = 0
+    
+    var listCast: [Cast] = []
+    var movie: MovieDetail?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        setupView()
+        loadData()
         setupMenuCollectionView()
     }
+    
+    func loadData() {
+        //        let dispatchGroup = DispatchGroup()
+        //        dispatchGroup.enter()
+        getMovieDetail(movieId: movieId){ movie in
+            print("HungDQ movie: \(movie.voteAverage)")
+            DispatchQueue.main.async{ [weak self] in
+                self?.ibdmText.text = "IBDm  \(movie.voteAverage)"
+                self?.moiveNameText.text = movie.title
+                self?.overViewText.text = movie.overview
+                self?.actionText.desc = movie.genres.first?.name ?? "Action"
+                self?.ageText.desc = movie.adult ? "18+" : "10+"
+                self?.statusText.desc = movie.status
+                self?.originalLanguageText.desc = movie.originalLanguage
+                self?.revenueText.desc = "\(movie.revenue)"
+                self?.budget.desc = "\(movie.budget)"
+                self?.movieImage.load(url: URL(string: baseImageUrl + movie.posterPath )!)
+                self?.reloadInputViews()
+            }
+            
+            
+        }
+        //        dispatchGroup.leave()
+        //
+        //        dispatchGroup.enter()
+        getMovieCredits(movieId: movieId){ [weak self] movieCredits in
+            self?.listCast = movieCredits.cast
+            DispatchQueue.main.async{ [weak self] in
+                self?.castCollection.reloadData()
+            }
+        }
+        //        dispatchGroup.leave()
+        //
+        //        // 1
+        //        dispatchGroup.notify(queue: .main, execute: {[weak self] in
+        //
+        //            if let movie = self?.movie {
+        //                self?.ibdmText.text = "IBDm  \(movie.voteAverage)"
+        //                self?.moiveNameText.text = movie.title
+        //                self?.overViewText.text = movie.overview
+        //                self?.actionText.desc = movie.genres.first?.name ?? "Action"
+        //                self?.ageText.desc = movie.adult ? "18+" : "10+"
+        //                self?.statusText.desc = movie.status
+        //                self?.originalLanguageText.desc = movie.originalLanguage
+        //                self?.revenueText.desc = "\(movie.revenue)"
+        //                self?.budget.desc = "\(movie.budget)"
+        //            }
+        //
+        //            self?.castCollection.reloadData()
+        //            self?.reloadInputViews()
+        //
+        //        })
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        setupView()
+    }
+    
     private func setupMenuCollectionView() {
         
         // Popular Movies
@@ -41,7 +122,7 @@ class MovieContentViewController: UIViewController {
             collectionViewFlowLayout.estimatedItemSize = .zero
             collectionViewFlowLayout.minimumLineSpacing = 15
             collectionViewFlowLayout.minimumInteritemSpacing = 8
-            collectionViewFlowLayout.itemSize = CGSize(width: 80, height: 165)
+            collectionViewFlowLayout.itemSize = CGSize(width: 80, height: 150)
             collectionViewFlowLayout.collectionView?.backgroundColor = .clear
         }
     }
@@ -49,18 +130,19 @@ class MovieContentViewController: UIViewController {
     func setupView(){
         containerView.setGradientView(colorTop: UIColor.init(rgb: 0xFF2C5775), colorBottom: UIColor.init(rgb: 0xFF4F4275))
         containerView.layer.cornerRadius = 20
+        containerView.clipsToBounds = true
+        containerView.layer.masksToBounds = true
         boxIndicatorView.layer.cornerRadius = 20
         indicatorView.layer.cornerRadius = 3
         ibdmView.layer.cornerRadius = 15
         ibdmView.layer.backgroundColor = UIColor.init(rgb: 0xFFF5C517).cgColor
         
         ibdmText.text = "IBDm  "
+        movieImage.backgroundColor = UIColor.lightGray
         
         let tapGesture = UILongPressGestureRecognizer(target: self, action: #selector(pullIndicatorBox))
         boxIndicatorView.isUserInteractionEnabled = true
         boxIndicatorView.addGestureRecognizer(tapGesture)
-        
-        
         
     }
     
@@ -82,7 +164,7 @@ class MovieContentViewController: UIViewController {
         
         UIView.animate(withDuration: 0.3) { [weak self] in
             let frame = self?.view.frame
-            let yComponent = UIScreen.main.bounds.height * 0.2
+            let yComponent = UIScreen.main.bounds.height * 0.1
             self?.view.frame = CGRectMake(0, yComponent, frame!.width, frame!.height)
         }
     }
@@ -97,15 +179,19 @@ extension MovieContentViewController: UICollectionViewDelegate {
 
 extension MovieContentViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 8
+        return listCast.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-
+        
         let cell = castCollection.dequeueReusableCell(withReuseIdentifier: "castCell", for: indexPath) as! CastCollectionViewCell
         cell.backgroundColor = UIColor.clear
-        cell.layer.cornerRadius = 20
-        cell.layer.backgroundColor = UIColor.red.cgColor
+        
+        cell.castImage.layer.cornerRadius = 15
+        
+        cell.castImage.load(url: URL(string: baseImageUrl + (listCast[indexPath.row].profilePath ?? ""))!)
+        cell.actorName.text = listCast[indexPath.row].originalName
+        cell.charactorName.text = listCast[indexPath.row].character ?? ""
         
         return cell
         

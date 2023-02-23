@@ -73,7 +73,7 @@ class CustomCategoryView: UIView {
         iconCategory.heightAnchor.constraint(equalTo: iconCategory.widthAnchor, multiplier: 1).isActive = true
         
         title.centerXAnchor.constraint(equalTo: iconCategory.centerXAnchor).isActive = true
-        title.topAnchor.constraint(equalTo: iconCategory.bottomAnchor, constant: 8).isActive = true
+        title.topAnchor.constraint(equalTo: iconCategory.bottomAnchor, constant: 4).isActive = true
         title.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.8).isActive = true
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapImage))

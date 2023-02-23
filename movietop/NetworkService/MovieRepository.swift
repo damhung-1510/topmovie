@@ -77,7 +77,7 @@ func getUpcomingMovies(completionHandler:@escaping ([MovieRecommend]) -> Void){
 }
 
     // MARK: Movie Detail
-func getMovieDetail (movieId:String,completionHandler:@escaping (MovieDetail) -> Void){
+func getMovieDetail (movieId: Int ,completionHandler:@escaping (MovieDetail) -> Void){
     
     let url = URL(string: "\(baseUrl)/3/movie/\(movieId)?api_key=\(apiKey)&language=en-US")!
     
@@ -98,11 +98,44 @@ func getMovieDetail (movieId:String,completionHandler:@escaping (MovieDetail) ->
             do {
                 let model = try JSONDecoder().decode(MovieDetail.self, from: data!)
                 completionHandler(model)
-            } catch {
-                print("Error Get Movie Detail ")
+            } catch let error {
+                print("Error Get Movie Detail \(error)")
             }
         }
     })
     
     task.resume()
 }
+
+
+// MARK: Movie credits
+func getMovieCredits (movieId: Int ,completionHandler:@escaping (MovieCredit) -> Void){
+    
+    let url = URL(string: "\(baseUrl)/3/movie/\(movieId)/credits?api_key=\(apiKey)&language=en-US")!
+    
+    var request = URLRequest(url: url)
+    request.httpMethod = "GET"
+    request.setValue(authorizationKey, forHTTPHeaderField: "Authorization")
+    
+    let session = URLSession.shared
+    
+    
+    let task = session.dataTask(with: request, completionHandler: { data, response, error in
+        if (error != nil) {
+            print(error!)
+        } else {
+            let httpResponse = response
+            print(httpResponse ?? "")
+            
+            do {
+                let model = try JSONDecoder().decode(MovieCredit.self, from: data!)
+                completionHandler(model)
+            } catch {
+                print("Error Get Movie Credits ")
+            }
+        }
+    })
+    
+    task.resume()
+}
+

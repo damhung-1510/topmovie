@@ -9,6 +9,9 @@ import UIKit
 //import FloatingPanel
 
 class MovieDetailViewController: UIViewController {
+    
+    var movieId: Int = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -23,8 +26,9 @@ class MovieDetailViewController: UIViewController {
     func addBottomSheetView() {
         // 1- Init bottomSheetVC
         let mainStorboard = UIStoryboard(name: "Main", bundle: nil)
-        let bottomSheetVC = mainStorboard.instantiateViewController(withIdentifier: "MovieContentViewController")
-
+        let bottomSheetVC = mainStorboard.instantiateViewController(withIdentifier: "MovieContentViewController") as! MovieContentViewController
+        bottomSheetVC.movieId = self.movieId
+        
         // 2- Add bottomSheetVC as a child view
         self.addChild(bottomSheetVC)
         self.view.addSubview(bottomSheetVC.view)
