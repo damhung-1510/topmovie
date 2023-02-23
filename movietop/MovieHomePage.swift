@@ -1,19 +1,18 @@
 //
-//  ViewController.swift
+//  MovieHomePage.swift
 //  movietop
 //
-//  Created by Dam Hung on 20/02/2023.
+//  Created by Dam Hung on 21/02/2023.
 //
 
 import UIKit
 
-class ViewController: UIViewController {
+class MovieHomePage: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         // Do any additional setup after loading the view.
     }
 
-
 }
-

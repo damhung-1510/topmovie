@@ -13,10 +13,41 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard let _ = (scene as? UIWindowScene) else { return }
+        
+        window = UIWindow(frame: UIScreen.main.bounds)
+        
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+                
+        let tabBarC = setupTabBarController()
+        let navigation = UINavigationController(rootViewController: tabBarC)
+        
+        navigation.navigationBar.isTranslucent = true
+        
+        
+        let lineView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 1))
+        lineView.backgroundColor = UIColor.white
+        
+        tabBarC.tabBar.addSubview(lineView)
+        tabBarC.tabBar.barTintColor = UIColor.init(rgb: 0xFF4A648C)
+        
+        window?.windowScene = windowScene
+        window?.rootViewController = navigation
+        
+        window?.makeKeyAndVisible()
+    }
+    
+    func setupTabBarController() -> UITabBarController {
+        let tabBarController: UITabBarController = UITabBarController()
+        let mainStorboard = UIStoryboard(name: "Main", bundle: nil)
+        
+        let homeVC = mainStorboard.instantiateViewController(withIdentifier: "HomePageView")
+        homeVC.tabBarItem = UITabBarItem(title: "", image: UIImage(systemName: "house"), selectedImage: UIImage(systemName: "house.fill"))
+        
+        let menuVC = mainStorboard.instantiateViewController(withIdentifier: "MovieDetailViewController")
+        menuVC.tabBarItem = UITabBarItem(title: "", image: UIImage(systemName: "brain.head.profile"), selectedImage: UIImage(systemName: "brain.head.profile.fill"))
+        
+        tabBarController.setViewControllers([homeVC, menuVC], animated: true)
+        return tabBarController
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
