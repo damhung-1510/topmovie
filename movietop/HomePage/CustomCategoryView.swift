@@ -22,7 +22,7 @@ class CustomCategoryView: UIView {
         title.translatesAutoresizingMaskIntoConstraints = false
         title.textAlignment = .center
         title.textColor = .white
-        title.font = UIFont.systemFont(ofSize: 11)
+        title.font = UIFont.systemFont(ofSize: 12)
         title.numberOfLines = 0
         return title
         
@@ -69,7 +69,7 @@ class CustomCategoryView: UIView {
         
         iconCategory.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
         iconCategory.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-        iconCategory.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.6).isActive = true
+        iconCategory.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.4).isActive = true
         iconCategory.heightAnchor.constraint(equalTo: iconCategory.widthAnchor, multiplier: 1).isActive = true
         
         title.centerXAnchor.constraint(equalTo: iconCategory.centerXAnchor).isActive = true

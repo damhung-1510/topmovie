@@ -108,6 +108,15 @@ class MovieContentViewController: UIViewController {
         setupView()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        if #available(iOS 15, *) {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            UINavigationBar.appearance().standardAppearance = appearance
+            UINavigationBar.appearance().scrollEdgeAppearance = appearance
+        }
+    }
+    
     private func setupMenuCollectionView() {
         
         // Popular Movies
@@ -137,7 +146,6 @@ class MovieContentViewController: UIViewController {
         ibdmView.layer.cornerRadius = 15
         ibdmView.layer.backgroundColor = UIColor.init(rgb: 0xFFF5C517).cgColor
         
-        ibdmText.text = "IBDm  "
         movieImage.backgroundColor = UIColor.lightGray
         
         let tapGesture = UILongPressGestureRecognizer(target: self, action: #selector(pullIndicatorBox))

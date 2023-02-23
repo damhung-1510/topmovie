@@ -99,9 +99,9 @@ class HomePageViewController: UIViewController {
         microImage.image = UIImage(systemName: "mic")!
         microImage.tintColor = UIColor.white
         
-        searchBoxView.layer.cornerRadius = 20
+        searchBoxView.layer.cornerRadius = 15
         searchBoxView.layer.masksToBounds = true
-        searchBoxView.layer.borderColor = UIColor.white.cgColor
+        searchBoxView.layer.borderColor = UIColor.lightGray.cgColor
         searchBoxView.layer.borderWidth = 1
         
         searchTextField.attributedPlaceholder = NSAttributedString(
