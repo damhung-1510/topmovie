@@ -66,6 +66,7 @@ class MovieContentViewController: UIViewController {
                 self?.revenueText.desc = "\(movie.revenue)"
                 self?.budget.desc = "\(movie.budget)"
                 self?.movieImage.load(url: URL(string: baseImageUrl + movie.posterPath )!)
+                self?.overViewText.appendReadmore(after: movie.overview ?? "", trailingContent: .readmore)
                 self?.reloadInputViews()
             }
             
@@ -148,15 +149,31 @@ class MovieContentViewController: UIViewController {
         
         movieImage.backgroundColor = UIColor.lightGray
         
-        let tapGesture = UILongPressGestureRecognizer(target: self, action: #selector(pullIndicatorBox))
-        boxIndicatorView.isUserInteractionEnabled = true
-        boxIndicatorView.addGestureRecognizer(tapGesture)
+        let tapGesture = UITapGestureRecognizer(target: overViewText, action: #selector(didTapOverViewText))
+        overViewText.isUserInteractionEnabled = true
+        overViewText.addGestureRecognizer(tapGesture)
+        
+//        let _tapGesture = UIPanGestureRecognizer(target: self, action: #selector(pullIndicatorBox))
+//        boxIndicatorView.isUserInteractionEnabled = true
+//        boxIndicatorView.addGestureRecognizer(_tapGesture)
         
     }
     
-    @objc func pullIndicatorBox() {
-        let gesture = UIPanGestureRecognizer.init(target: self, action: #selector(MovieContentViewController.panGesture))
-        view.addGestureRecognizer(gesture)
+//    @objc func pullIndicatorBox() {
+//        let gesture = UIPanGestureRecognizer.init(target: self, action: #selector(MovieContentViewController.panGesture))
+//        view.addGestureRecognizer(gesture)
+//    }
+    
+    @objc func didTapOverViewText(_ sender: UITapGestureRecognizer) {
+        guard let text = overViewText.text else { return }
+        
+        let readmore = (text as NSString).range(of: TrailingContent.readmore.text)
+        let readless = (text as NSString).range(of: TrailingContent.readless.text)
+        if sender.didTap(label: overViewText, inRange: readmore) {
+            overViewText.appendReadLess(after: text, trailingContent: .readless)
+        } else if  sender.didTap(label: overViewText, inRange: readless) {
+            overViewText.appendReadmore(after: text, trailingContent: .readmore)
+        } else { return }
     }
     
     

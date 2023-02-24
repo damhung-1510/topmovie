@@ -32,7 +32,6 @@ func getMovieRecommend(completionHandler:@escaping ([MovieRecommend]) -> Void){
             do {
                 let model = try JSONDecoder().decode(ArrayResponse<MovieRecommend>.self, from: data!)
                 print("Đây là Recommend \(model.results?[0].name ?? "huhu")")
-                
                 completionHandler(model.results ?? [])
             } catch {
                 print("Error")

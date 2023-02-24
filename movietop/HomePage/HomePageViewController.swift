@@ -9,6 +9,8 @@ import UIKit
 
 class HomePageViewController: UIViewController {
     
+    @IBOutlet weak var accountNameText: UILabel!
+    
     @IBOutlet weak var popularMoviesCollection: UICollectionView!
     
     @IBOutlet weak var upcomingColletionView: UICollectionView!
@@ -43,16 +45,18 @@ class HomePageViewController: UIViewController {
     
     var upcomingMovies: [MovieRecommend] = []
     
+    let cellWidth = (3 / 4) * UIScreen.main.bounds.width
+    let sectionSpacing = (1 / 8) * UIScreen.main.bounds.width
+    let cellSpacing = (1 / 16) * UIScreen.main.bounds.width
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        let tapGestureBackground = UITapGestureRecognizer(target: self, action: #selector(self.backgroundTapped(_:)))
-//        self.view.addGestureRecognizer(tapGestureBackground)
         
         getMovieRecommend() { movies in
             self.myMovies = movies
             DispatchQueue.main.async{ [weak self] in
                 self?.popularMoviesCollection.reloadData()
+                
             }
         }
         
@@ -62,19 +66,21 @@ class HomePageViewController: UIViewController {
                 self?.upcomingColletionView.reloadData()
             }
         }
-        
-        setupMenuCollectionView()
-        setupSearchBarView()
-        
         /// press category view
         movieButton.onPress = { desc in
-            print("genresButton \(desc)")
+            print("movieButton \(desc)")
         }
         
         genresButton.onPress = { desc in
             print("genresButton \(desc)")
         }
         
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        setupMenuCollectionView()
+        setupSearchBarView()
     }
     
     @objc func backgroundTapped(_ sender: UITapGestureRecognizer)
@@ -90,6 +96,9 @@ class HomePageViewController: UIViewController {
     }
     
     func setupSearchBarView(){
+        accountNameText.text = "Hi, Hungdq"
+        accountNameText.highlight(text: "Hungdq", font: UIFont.systemFont(ofSize: 18, weight: .heavy), color: .white)
+        
         bellImage.image = UIImage(systemName: "bell")!
         bellImage.tintColor = UIColor.white
         
@@ -127,23 +136,27 @@ class HomePageViewController: UIViewController {
         popularMoviesCollection.delegate = self
         popularMoviesCollection.dataSource = self
         popularMoviesCollection.showsHorizontalScrollIndicator = false
-        popularMoviesCollection.isPagingEnabled = true
+        popularMoviesCollection.showsVerticalScrollIndicator = false
+        popularMoviesCollection.translatesAutoresizingMaskIntoConstraints = false
+        popularMoviesCollection.decelerationRate = .fast
+        popularMoviesCollection.backgroundColor = .clear
         
-        if let collectionViewFlowLayout = popularMoviesCollection?.collectionViewLayout as? UICollectionViewFlowLayout {
-            collectionViewFlowLayout.scrollDirection = .horizontal
-            collectionViewFlowLayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-            collectionViewFlowLayout.estimatedItemSize = .zero
-            collectionViewFlowLayout.minimumLineSpacing = 15
-            collectionViewFlowLayout.minimumInteritemSpacing = 8
-            collectionViewFlowLayout.itemSize = CGSize(width: 300, height: 120)
-            collectionViewFlowLayout.collectionView?.backgroundColor = .clear
-        }
+        let layout = PagingCollectionViewLayout()
+        layout.scrollDirection = .horizontal
+        layout.estimatedItemSize = .zero
+        layout.sectionInset = UIEdgeInsets(top: 0, left: sectionSpacing, bottom: 0, right: sectionSpacing)
+        layout.itemSize = CGSize(width: cellWidth, height: 120)
+        layout.minimumLineSpacing = cellSpacing
         
+        
+        popularMoviesCollection.collectionViewLayout = layout
         // Popular Movies
         upcomingColletionView.delegate = self
         upcomingColletionView.dataSource = self
         upcomingColletionView.showsHorizontalScrollIndicator = false
+        upcomingColletionView.showsVerticalScrollIndicator = false
         upcomingColletionView.isPagingEnabled = true
+        upcomingColletionView.showsVerticalScrollIndicator = false
         
         if let collectionViewFlowLayout = upcomingColletionView?.collectionViewLayout as? UICollectionViewFlowLayout {
             collectionViewFlowLayout.scrollDirection = .horizontal
@@ -203,7 +216,6 @@ extension HomePageViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
         
         if collectionView == popularMoviesCollection {
             let cell = popularMoviesCollection.dequeueReusableCell(withReuseIdentifier: "movieCell", for: indexPath) as! MovieCollectionViewCell

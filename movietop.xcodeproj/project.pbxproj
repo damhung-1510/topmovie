@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6A09DF6B29A8501700008C0B /* PagingCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A09DF6A29A8501700008C0B /* PagingCollectionViewLayout.swift */; };
+		6A09DF6F29A8658500008C0B /* LoadingIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A09DF6E29A8658500008C0B /* LoadingIndicatorView.swift */; };
+		6A09DF7129A8A19100008C0B /* ReadMoreText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A09DF7029A8A19100008C0B /* ReadMoreText.swift */; };
 		6A0BA83929A5C17A00126042 /* HomePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0BA83829A5C17A00126042 /* HomePageViewController.swift */; };
 		6A0BA83B29A5C62200126042 /* MovieCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0BA83A29A5C62200126042 /* MovieCollectionViewCell.swift */; };
 		6A0BA83E29A606E700126042 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0BA83D29A606E700126042 /* Constant.swift */; };
@@ -31,6 +34,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6A09DF6A29A8501700008C0B /* PagingCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingCollectionViewLayout.swift; sourceTree = "<group>"; };
+		6A09DF6E29A8658500008C0B /* LoadingIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingIndicatorView.swift; sourceTree = "<group>"; };
+		6A09DF7029A8A19100008C0B /* ReadMoreText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadMoreText.swift; sourceTree = "<group>"; };
 		6A0BA83829A5C17A00126042 /* HomePageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageViewController.swift; sourceTree = "<group>"; };
 		6A0BA83A29A5C62200126042 /* MovieCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCollectionViewCell.swift; sourceTree = "<group>"; };
 		6A0BA83D29A606E700126042 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
@@ -82,6 +88,9 @@
 			isa = PBXGroup;
 			children = (
 				6A0BA83D29A606E700126042 /* Constant.swift */,
+				6A09DF6A29A8501700008C0B /* PagingCollectionViewLayout.swift */,
+				6A09DF6E29A8658500008C0B /* LoadingIndicatorView.swift */,
+				6A09DF7029A8A19100008C0B /* ReadMoreText.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -226,6 +235,7 @@
 				6ACFA6B029A74797001958EC /* CustomButtonView.swift in Sources */,
 				6A7E95DF29A7926A00497866 /* MovieCredit.swift in Sources */,
 				6A88295929A45E4200845AC0 /* ArrayResponse.swift in Sources */,
+				6A09DF6B29A8501700008C0B /* PagingCollectionViewLayout.swift in Sources */,
 				6A88295429A457A500845AC0 /* MovieHomePage.swift in Sources */,
 				6A88295729A45DFB00845AC0 /* MovieRecommend.swift in Sources */,
 				6A7E95DD29A76E4200497866 /* InfoView.swift in Sources */,
@@ -233,10 +243,12 @@
 				6ACFA6AE29A7251F001958EC /* MovieContentViewController.swift in Sources */,
 				6ACFA6AC29A7164C001958EC /* MovieDetailViewController.swift in Sources */,
 				6A88295C29A4609900845AC0 /* MovieRepository.swift in Sources */,
+				6A09DF6F29A8658500008C0B /* LoadingIndicatorView.swift in Sources */,
 				6AF9194329A312A500753E57 /* AppDelegate.swift in Sources */,
 				6A7E95DB29A764AD00497866 /* CastCollectionViewCell.swift in Sources */,
 				6A0BA84029A6172600126042 /* UpcomingMovieViewCell.swift in Sources */,
 				6A0BA83B29A5C62200126042 /* MovieCollectionViewCell.swift in Sources */,
+				6A09DF7129A8A19100008C0B /* ReadMoreText.swift in Sources */,
 				6A0BA83E29A606E700126042 /* Constant.swift in Sources */,
 				6A0BA83929A5C17A00126042 /* HomePageViewController.swift in Sources */,
 				6A0BA84429A659BA00126042 /* CustomCategoryView.swift in Sources */,
@@ -390,6 +402,7 @@
 				DEVELOPMENT_TEAM = 298X55CX6J;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = movietop/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Freedom Movie";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -418,6 +431,7 @@
 				DEVELOPMENT_TEAM = 298X55CX6J;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = movietop/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Freedom Movie";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
