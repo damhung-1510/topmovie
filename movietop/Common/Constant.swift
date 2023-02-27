@@ -40,7 +40,7 @@ extension UIColor {
             alpha: a
         )
     }
-
+    
     convenience init(rgb: Int, a: CGFloat = 1.0) {
         self.init(
             red: (rgb >> 16) & 0xFF,
@@ -70,7 +70,7 @@ extension UILabel {
         guard let fullText = self.text, let target = text else {
             return
         }
-
+        
         let attribText = NSMutableAttributedString(string: fullText)
         let range: NSRange = attribText.mutableString.range(of: target, options: .caseInsensitive)
         
@@ -83,5 +83,20 @@ extension UILabel {
         }
         attribText.addAttributes(attributes, range: range)
         self.attributedText = attribText
+    }
+}
+
+
+extension UICollectionViewCell {
+    func transformToSmall() {
+        UIView.animate(withDuration: 0.2) {
+            self.transform = CGAffineTransform(scaleX: 1, y: 0.785)
+        }
+    }
+    
+    func transformToStandard() {
+        UIView.animate(withDuration: 0.2) {
+            self.transform = CGAffineTransform.identity
+        }
     }
 }

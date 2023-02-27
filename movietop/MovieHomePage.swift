@@ -16,6 +16,8 @@ class MovieHomePage: UIViewController {
     let colors: [UIColor] = [.red, .green, .blue, .purple, .orange, .black, .cyan]
     let cellId = "cell id"
     
+
+    @IBOutlet weak var collectionDemoView: UICollectionView!
     // MARK: - UI Components
     
     lazy var collectionView: UICollectionView = {
@@ -38,19 +40,31 @@ class MovieHomePage: UIViewController {
         super.viewDidLoad()
         
         design()
-        registerCollectionViewCells()
-        applyConstraints()
+//        registerCollectionViewCells()
+//        applyConstraints()
     }
     
     // MARK: - Setup
     
     private func design() {
         view.backgroundColor = .white
+        let layout = PagingCollectionViewLayout()
+        layout.scrollDirection = .horizontal
+        layout.sectionInset = UIEdgeInsets(top: 0, left: sectionSpacing, bottom: 0, right: sectionSpacing)
+        layout.itemSize = CGSize(width: cellWidth, height: cellWidth)
+        layout.minimumLineSpacing = cellSpacing
+        
+        collectionDemoView.translatesAutoresizingMaskIntoConstraints = false
+        collectionDemoView.showsHorizontalScrollIndicator = false
+        collectionDemoView.backgroundColor = .white
+        collectionDemoView.decelerationRate = .fast
+        collectionDemoView.dataSource = self
+        collectionDemoView.collectionViewLayout = layout
     }
     
-    private func registerCollectionViewCells() {
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: cellId)
-    }
+//    private func registerCollectionViewCells() {
+//        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: cellId)
+//    }
     
     private func applyConstraints() {
         view.addSubview(collectionView)
@@ -69,7 +83,7 @@ extension MovieHomePage: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell1", for: indexPath)
         let color = colors[indexPath.item]
         cell.backgroundColor = color
         return cell

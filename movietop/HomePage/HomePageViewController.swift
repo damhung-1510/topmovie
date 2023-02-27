@@ -13,6 +13,8 @@ class HomePageViewController: UIViewController {
     
     @IBOutlet weak var popularMoviesCollection: UICollectionView!
     
+    @IBOutlet weak var pupularContainerView: UIView!
+    
     @IBOutlet weak var upcomingColletionView: UICollectionView!
     
     @IBOutlet weak var containerView: UIView!
@@ -49,13 +51,23 @@ class HomePageViewController: UIViewController {
     let sectionSpacing = (1 / 8) * UIScreen.main.bounds.width
     let cellSpacing = (1 / 16) * UIScreen.main.bounds.width
     
+    private var currentSelectedIndex = 1
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setupMenuCollectionView()
+        setupSearchBarView()
         
         getMovieRecommend() { movies in
             self.myMovies = movies
             DispatchQueue.main.async{ [weak self] in
+                self?.currentSelectedIndex = 1
+                self?.popularPageControl.currentPage = 1
                 self?.popularMoviesCollection.reloadData()
+                self?.popularPageControl.reloadInputViews()
+                self?.popularMoviesCollection.isPagingEnabled = false
+                self?.popularMoviesCollection.scrollToItem(at: IndexPath(row: 1, section: 0), at: .centeredHorizontally, animated: false)
                 
             }
         }
@@ -64,6 +76,7 @@ class HomePageViewController: UIViewController {
             self.upcomingMovies = movies
             DispatchQueue.main.async{ [weak self] in
                 self?.upcomingColletionView.reloadData()
+                self?.upcomingColletionView.scrollToItem(at: IndexPath(row: 1, section: 0), at: .centeredHorizontally, animated: false)
             }
         }
         /// press category view
@@ -79,8 +92,6 @@ class HomePageViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        setupMenuCollectionView()
-        setupSearchBarView()
     }
     
     @objc func backgroundTapped(_ sender: UITapGestureRecognizer)
@@ -133,29 +144,42 @@ class HomePageViewController: UIViewController {
     private func setupMenuCollectionView() {
         
         // Popular Movies
-        popularMoviesCollection.delegate = self
-        popularMoviesCollection.dataSource = self
-        popularMoviesCollection.showsHorizontalScrollIndicator = false
-        popularMoviesCollection.showsVerticalScrollIndicator = false
-        popularMoviesCollection.translatesAutoresizingMaskIntoConstraints = false
-        popularMoviesCollection.decelerationRate = .fast
-        popularMoviesCollection.backgroundColor = .clear
+        //        popularMoviesCollection.delegate = self
+        //        popularMoviesCollection.dataSource = self
+        //        popularMoviesCollection.showsHorizontalScrollIndicator = false
+        //        popularMoviesCollection.showsVerticalScrollIndicator = false
+        //        popularMoviesCollection.translatesAutoresizingMaskIntoConstraints = false
+        //        popularMoviesCollection.decelerationRate = .fast
+        //        popularMoviesCollection.backgroundColor = .clear
         
         let layout = PagingCollectionViewLayout()
         layout.scrollDirection = .horizontal
-        layout.estimatedItemSize = .zero
         layout.sectionInset = UIEdgeInsets(top: 0, left: sectionSpacing, bottom: 0, right: sectionSpacing)
         layout.itemSize = CGSize(width: cellWidth, height: 120)
         layout.minimumLineSpacing = cellSpacing
         
-        
+        popularMoviesCollection.translatesAutoresizingMaskIntoConstraints = false
+        popularMoviesCollection.showsHorizontalScrollIndicator = false
+        popularMoviesCollection.backgroundColor = .clear
+        popularMoviesCollection.decelerationRate = .fast
+        popularMoviesCollection.dataSource = self
         popularMoviesCollection.collectionViewLayout = layout
+        
+        //        let layout = PagingCollectionViewLayout()
+        //        layout.scrollDirection = .horizontal
+        //        layout.estimatedItemSize = .zero
+        //        layout.sectionInset = UIEdgeInsets(top: 0, left: sectionSpacing, bottom: 0, right: sectionSpacing)
+        //        layout.itemSize = CGSize(width: cellWidth, height: 120)
+        //        layout.minimumLineSpacing = cellSpacing
+        //
+        //
+        //        popularMoviesCollection.collectionViewLayout = layout
         // Popular Movies
         upcomingColletionView.delegate = self
         upcomingColletionView.dataSource = self
         upcomingColletionView.showsHorizontalScrollIndicator = false
         upcomingColletionView.showsVerticalScrollIndicator = false
-        upcomingColletionView.isPagingEnabled = true
+        upcomingColletionView.isPagingEnabled = false
         upcomingColletionView.showsVerticalScrollIndicator = false
         
         if let collectionViewFlowLayout = upcomingColletionView?.collectionViewLayout as? UICollectionViewFlowLayout {
@@ -190,11 +214,11 @@ extension HomePageViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        cell.alpha = 0
-        UIView.animate(withDuration: 0.8) {
-            cell.alpha = 1
-        }
-        
+//                cell.alpha = 0
+//                UIView.animate(withDuration: 0.8) {
+//                    cell.alpha = 1
+//                }
+        currentSelectedIndex = indexPath.row
         if collectionView == popularMoviesCollection {
             popularPageControl.currentPage = indexPath.row
         } else {
@@ -224,6 +248,15 @@ extension HomePageViewController: UICollectionViewDataSource {
             cell.movieTitle.text = myMovies[indexPath.row].name ?? ""
             
             cell.movieImage.load(url: URL(string: baseImageUrl + (self.myMovies[indexPath.row].posterPath ?? ""))!)
+            
+            
+            if (currentSelectedIndex + 1) == indexPath.row {
+                cell.transformToSmall()
+            }
+            if (currentSelectedIndex - 1) == indexPath.row {
+                cell.transformToSmall()
+            }
+            
             return cell
         } else{
             let cell = upcomingColletionView.dequeueReusableCell(withReuseIdentifier: "upcomingMovieCell", for: indexPath) as! UpcomingMovieViewCell
@@ -234,6 +267,75 @@ extension HomePageViewController: UICollectionViewDataSource {
             
             return cell
         }
+    }
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        if scrollView == popularMoviesCollection{
+            let currentCell = popularMoviesCollection.cellForItem(at: IndexPath(row: Int(currentSelectedIndex), section: 0))
+            currentCell?.transformToStandard()
+        }
+    }
+    
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        if scrollView == popularMoviesCollection{
+            guard scrollView == popularMoviesCollection else {
+                return
+            }
+            
+            targetContentOffset.pointee = scrollView.contentOffset
+            let cellWidthIncludingSpacing = cellWidth + 0
+            let offset = targetContentOffset.pointee
+            let horizontalVelocity = velocity.x
+            
+            var selectedIndex = currentSelectedIndex
+            
+            switch horizontalVelocity {
+                // On swiping
+            case _ where horizontalVelocity > 0 :
+                selectedIndex = currentSelectedIndex + 1
+            case _ where horizontalVelocity < 0:
+                selectedIndex = currentSelectedIndex - 1
+                
+                // On dragging
+            case _ where horizontalVelocity == 0:
+                let index = (offset.x + scrollView.contentInset.left) / cellWidthIncludingSpacing
+                let roundedIndex = round(index)
+                
+                selectedIndex = Int(roundedIndex)
+            default:
+                print("Incorrect velocity for collection view")
+            }
+            
+            let safeIndex = max(0, min(selectedIndex, myMovies.count - 1))
+            let selectedIndexPath = IndexPath(row: safeIndex, section: 0)
+            let indexCheck = currentSelectedIndex > safeIndex ? (safeIndex - 1) : (safeIndex + 1)
+            popularMoviesCollection!.scrollToItem(at: selectedIndexPath, at: .centeredHorizontally, animated: true)
+            
+            if(currentSelectedIndex != safeIndex){
+                
+                let previousSelectedIndex = IndexPath(row: Int(currentSelectedIndex), section: 0)
+                let previousSelectedCell = popularMoviesCollection.cellForItem(at: previousSelectedIndex)
+                let currentSelectedCell = popularMoviesCollection.cellForItem(at: selectedIndexPath)
+                
+                
+                currentSelectedIndex = selectedIndexPath.row
+                
+                currentSelectedCell?.transformToStandard()
+                previousSelectedCell?.transformToSmall()
+                
+                if(safeIndex != 0){
+                    
+                    let selectedIndexOldPath = IndexPath(row: indexCheck, section: 0)
+                    let currentOld = popularMoviesCollection.cellForItem(at: selectedIndexOldPath)
+                    currentOld?.transformToSmall()
+                }
+            }
+            else{
+                ///NoAction
+            }
+            
+        }
+        
     }
 }
 
