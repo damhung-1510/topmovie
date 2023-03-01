@@ -144,8 +144,8 @@ class HomePageViewController: UIViewController {
     private func setupMenuCollectionView() {
         
         // Popular Movies
-        //        popularMoviesCollection.delegate = self
-        //        popularMoviesCollection.dataSource = self
+                popularMoviesCollection.delegate = self
+                popularMoviesCollection.dataSource = self
         //        popularMoviesCollection.showsHorizontalScrollIndicator = false
         //        popularMoviesCollection.showsVerticalScrollIndicator = false
         //        popularMoviesCollection.translatesAutoresizingMaskIntoConstraints = false
@@ -210,6 +210,10 @@ extension HomePageViewController: UICollectionViewDelegate {
     func tapMovie(movie: MovieRecommend) {
         let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "MovieDetailViewController") as? MovieDetailViewController
         vc?.movieId = movie.id ?? 0
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.isTranslucent = true
+        self.navigationController?.view.backgroundColor = UIColor.clear
         self.navigationController?.pushViewController(vc!, animated: true)
     }
     
